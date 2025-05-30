@@ -26,6 +26,16 @@ const store = createStore({
         },
         setUser(state,user){
             state.user = user
+        },
+        clearTokenAndUser(state){
+            state.accessToken = {
+                token : null,
+                expiresIn : null
+            }
+            state.user = null;
+            state.expTime = null;
+            state.expirationDate = null;
+            router.push({name : 'Login'})
         }
     },
     getters: {

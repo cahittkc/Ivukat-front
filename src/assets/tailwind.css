@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+
+
+
+@layer {
+    .input-item {
+        @apply  h-[44px] text-xs rounded-lg text-zinc-700 outline-0 border border-gray-400 focus:border-indigo-500 w-full transition-all pl-1
+    }
+    .input-item-w-icon {
+        @apply  h-[44px] text-xs rounded-lg text-zinc-700 outline-0 border border-gray-400 focus:border-indigo-500 w-full transition-all pl-9
+    }
+    .select-item {
+        @apply  h-[44px] text-xs rounded-lg text-zinc-700 outline-0 border border-gray-400 focus:border-indigo-500 w-full transition-all pl-1
+    }
+    .input-icon {
+        @apply text-sm absolute left-3 top-[15px] text-zinc-700
+    }
+    .xs-txt{
+        @apply text-xs text-zinc-800
+    }
+}

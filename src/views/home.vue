@@ -2,7 +2,7 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Dava Listesi</h1>
-            <button class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors duration-200">
+            <button @click="this.addCaseModal = true" class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors duration-200">
                 Yeni Dava Ekle
             </button>
         </div>
@@ -49,7 +49,7 @@
                                     <p class="text-gray-800 font-medium text-sm">
                                         {{ lawyer.firstName }} {{ lawyer.lastName }}
                                     </p>
-                                    <p class="text-gray-600 text-xs">{{ lawyer.role.name }}</p>
+                                    <p class="text-gray-600 text-xs">{{ lawyer?.role?.name }}</p>
                                 </div>
                             </div>
                         </div>
@@ -86,6 +86,98 @@
             </div>
         </div>
     </div>
+
+    <general-Modal
+        v-model="addCaseModal"
+        title="Başlık"
+        :full-height="false"
+        :close-on-backdrop="true"
+        :close-on-esc="true"
+        @close="handleClose"
+    >
+    <template #content>
+        <div class="flex flex-col w-full space-y-5 pb-[100px]">
+            <div class="flex flex-col gap-y-1">
+                <span class="xs-txt">Title</span>
+                <input v-model="addObj.title" class="input-item" type="text">
+            </div>
+            <div class="flex flex-col gap-y-1">
+                <span class="xs-txt">Description</span>
+                <input v-model="addObj.description" class="input-item" type="text">
+            </div>
+            <div class="flex flex-col gap-y-1">
+                <span class="xs-txt">Case Types</span>
+                <select v-model="addObj.typeId" class="select-item" name="" id="">
+                    <option  v-for="ct in caseTypes" :value="ct.id">{{ ct.name }}</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-y-1">
+                <span class="xs-txt">Employees</span>
+                <div class="relative">
+                    <div 
+                        @click="toggleDropdown" 
+                        class="select-item min-h-[38px] flex flex-wrap gap-2 p-1 cursor-pointer"
+                    >
+                        <div v-if="selectedLawyers.length === 0" class="text-gray-400 py-1 px-2 flex items-center">
+                            Select employees...
+                        </div>
+                        <div 
+                            v-for="lawyer in selectedLawyers" 
+                            :key="lawyer.id"
+                            class="bg-blue-100 text-blue-800 px-2 py-1 rounded-md flex items-center gap-1 text-sm"
+                        >
+                            {{ lawyer.firstName }}
+                            <button 
+                                @click.stop="removeLawyer(lawyer)"
+                                class="text-blue-600 hover:text-blue-800"
+                            >
+                                ×
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div 
+                        v-if="isDropdownOpen" 
+                        class="absolute z-[80] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                        <div class="p-2">
+                            <input 
+                                type="text"
+                                v-model="searchQuery"
+                                placeholder="Search employees..."
+                                class="w-full px-3 py-2 xs-txt border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div class="py-1">
+                            <div 
+                                v-for="lawyer in filteredLawyers" 
+                                :key="lawyer.id"
+                                @click="toggleLawyerSelection(lawyer)"
+                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2 xs-txt"
+                                :class="{ 'bg-blue-50': isSelected(lawyer) }"
+                            >
+                                <div class="w-4 h-4 border border-gray-300 rounded flex items-center justify-center"
+                                    :class="{ 'bg-blue-500 border-blue-500': isSelected(lawyer) }"
+                                >
+                                    <svg v-if="isSelected(lawyer)" class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                                    </svg>
+                                </div>
+                                {{ lawyer.firstName }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template #actions>
+        <div class="flex items-center justify-center gap-x-5">
+            <button @click="addCaseModal = false" class="outline-none h-[32px] flex items-center justify-center text-xs bg-red-500 text-white px-5 py-2 rounded-lg">Cancel</button>
+            <button @click="addCase();" class="outline-none h-[32px] flex items-center justify-center text-xs bg-green-600 text-white px-5 py-2 rounded-lg">Save</button>
+        </div>
+    </template>
+    </general-Modal>
 </template>
 
 <script>
@@ -94,11 +186,42 @@ import { mapState } from 'vuex'
 export default {
     name: 'Home',
     computed: {
-        ...mapState(["user"])
+        ...mapState(["user"]),
+        filteredLawyers() {
+            return this.employees.filter(lawyer => 
+                lawyer.firstName.toLowerCase().includes(this.searchQuery.toLowerCase())
+            )
+        }
     },
     data() {
         return {
+            addObj : {
+                title :null,
+                description : null,
+                companyId  : this.user?.company?.id,
+                typeId : null,
+                lawyerIds : [],
+            },
             cases: [],
+            addCaseModal : false,
+            employees : [],
+            caseTypes : [],
+            isDropdownOpen: false,
+            searchQuery: '',
+            selectedLawyers: [],
+        }
+    },
+    watch : {
+        addCaseModal(value){
+            if(value == false){
+                this.addObj = {
+                    title :null,
+                    description : null,
+                    companyId  : this.user?.company?.id,
+                    typeId : null,
+                    lawyerIds : [],
+                }
+            }
         }
     },
     methods: {
@@ -110,10 +233,63 @@ export default {
         },
         formatDate(dateString) {
             return new Date(dateString).toLocaleDateString('tr-TR')
+        },
+        async getCompanyLawyers(){
+            let data = {
+                companyId : this.user.company.id,
+                roleId : 2
+            }
+            const response = await this.$appAxios.post('users/get-company-employees',data)
+            if(response.success){
+                this.employees = response.data
+            }
+        },
+        async getCaseTypes(){
+            const response = await this.$appAxios.get('case-types/get-all-case-types')
+            if(response.success){
+                this.caseTypes = response.data
+            }
+        },
+        async addCase(){
+            const response = await this.$appAxios.post('cases/add-case',this.addObj)
+            if(response.success){
+                this.addCaseModal = false
+                await this.getMyCases();
+            }
+        },
+        toggleDropdown() {
+            this.isDropdownOpen = !this.isDropdownOpen
+        },
+        toggleLawyerSelection(lawyer) {
+            const index = this.selectedLawyers.findIndex(l => l.id === lawyer.id)
+            if (index === -1) {
+                this.selectedLawyers.push(lawyer)
+                this.addObj.lawyerIds.push(lawyer.id)
+            } else {
+                this.selectedLawyers.splice(index, 1)
+                this.addObj.lawyerIds = this.addObj.lawyerIds.filter(id => id !== lawyer.id)
+            }
+        },
+        removeLawyer(lawyer) {
+            this.selectedLawyers = this.selectedLawyers.filter(l => l.id !== lawyer.id)
+            this.addObj.lawyerIds = this.addObj.lawyerIds.filter(id => id !== lawyer.id)
+        },
+        isSelected(lawyer) {
+            return this.selectedLawyers.some(l => l.id === lawyer.id)
         }
     },
     async created() {
         await this.getMyCases();
+        await this.getCompanyLawyers();
+        await this.getCaseTypes();
+    },
+    mounted() {
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.relative')) {
+                this.isDropdownOpen = false
+            }
+        })
     }
 }
 </script>

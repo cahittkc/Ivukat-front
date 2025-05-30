@@ -39,7 +39,7 @@ axiosInstance.interceptors.response.use(
             // 401 Unauthorized hatası durumunda
             if (error.response.status === 401) {
                 // Store'daki logout action'ını çağır
-                await store.dispatch('logout');
+                store.commit('clearTokenAndUser');
             }
         }
         return Promise.reject(error);
