@@ -11,7 +11,8 @@ const store = createStore({
         },
         expTime : null,
         expirationDate : null,
-        user : null
+        user : null,
+        isAuthenticated : false,
     },
     mutations: {
         setToken(state, data) {
@@ -25,6 +26,7 @@ const store = createStore({
             state.expirationDate = time
         },
         setUser(state,user){
+            state.isAuthenticated = user ? true : false;
             state.user = user
         },
         clearTokenAndUser(state){
@@ -41,7 +43,10 @@ const store = createStore({
     getters: {
         getToken(state) {
             return state.accessToken.token;
-        }
+        },
+        getIsAuthenticated(state){
+            return state.isAuthenticated
+        },
     },
 
     actions : {

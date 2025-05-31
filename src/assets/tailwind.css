@@ -19,4 +19,24 @@
     .xs-txt{
         @apply text-xs text-zinc-800
     }
+
+
+    .list table {
+        @apply min-w-full divide-y divide-gray-200
+    }
+    .list table thead {
+        @apply bg-gray-50
+    }
+    .list table thead th {
+        @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider
+    }
+    .list table tbody {
+        @apply bg-white divide-y divide-gray-200
+    }
+    .list table tbody tr {
+        @apply hover:bg-gray-50
+    }
+    .list table tbody tr td {
+       @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider 
+    }
 }

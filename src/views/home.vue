@@ -2,88 +2,66 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Dava Listesi</h1>
-            <button @click="this.addCaseModal = true" class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors duration-200">
-                Yeni Dava Ekle
-            </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div v-for="caseItem in cases" :key="caseItem.id" class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-                <!-- Dava Başlığı ve Tipi -->
-                <div class="p-6 border-b border-gray-100">
-                    <div class="flex justify-between items-start">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ caseItem.title }}</h2>
-                        <span class="px-3 py-1 bg-cyan-100 text-cyan-800 rounded-full text-sm font-medium">
-                            {{ caseItem.type.name }}
-                        </span>
-                    </div>
-                    <p class="text-gray-600 text-sm mt-2">{{ caseItem.description }}</p>
-                </div>
-
-                <!-- Dava Detayları -->
-                <div class="p-6">
-                    <!-- Şirket Bilgileri -->
-                    <div class="mb-4">
-                        <h3 class="text-sm font-medium text-gray-500 mb-2">Şirket Bilgileri</h3>
-                        <div class="bg-gray-50 rounded-lg p-3">
-                            <p class="text-gray-800 font-medium">{{ caseItem.company.name }}</p>
-                            <p class="text-gray-600 text-sm">{{ caseItem.company.email }}</p>
-                            <p class="text-gray-600 text-sm">{{ caseItem.company.phoneNumber }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Avukatlar -->
-                    <div class="mb-4">
-                        <h3 class="text-sm font-medium text-gray-500 mb-2">Avukatlar</h3>
-                        <div class="space-y-2">
-                            <div v-for="lawyer in caseItem.lawyers" :key="lawyer.id" 
-                                 class="flex items-center space-x-3 bg-gray-50 rounded-lg p-3">
-                                <div class="flex-shrink-0">
-                                    <div class="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center">
-                                        <span class="text-cyan-800 font-medium text-sm">
-                                            {{ lawyer.firstName.charAt(0) }}{{ lawyer.lastName.charAt(0) }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="text-gray-800 font-medium text-sm">
-                                        {{ lawyer.firstName }} {{ lawyer.lastName }}
-                                    </p>
-                                    <p class="text-gray-600 text-xs">{{ lawyer?.role?.name }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tarih Bilgileri -->
-                    <div class="flex justify-between text-sm text-gray-500">
-                        <div>
-                            <span class="font-medium">Oluşturulma:</span>
-                            {{ formatDate(caseItem.createdAt) }}
-                        </div>
-                        <div>
-                            <span class="font-medium">Güncelleme:</span>
-                            {{ formatDate(caseItem.updatedAt) }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Aksiyon Butonları -->
-                <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
-                    <div class="flex justify-end space-x-3">
-                        <button class="text-gray-600 hover:text-gray-800 transition-colors duration-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                            </svg>
-                        </button>
-                        <button class="text-gray-600 hover:text-gray-800 transition-colors duration-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+            <div class="flex items-center gap-4">
+                
+                <button @click="this.addCaseModal = true" class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors duration-200">
+                    Yeni Dava Ekle
+                </button>
             </div>
+        </div>
+       
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Başlık</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tip</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Şirket</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Oluşturulma</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Güncelleme</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr v-for="caseItem in cases" :key="caseItem.id" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ caseItem.title }}</div>
+                            <div class="text-sm text-gray-500">{{ caseItem.description }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 bg-cyan-100 text-cyan-800 rounded-full text-sm font-medium">
+                                {{ caseItem.type.name }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ caseItem.company.name }}</div>
+                            <div class="text-sm text-gray-500">{{ caseItem.company.email }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ formatDate(caseItem.createdAt) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ formatDate(caseItem.updatedAt) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end space-x-3">
+                                <button class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                    </svg>
+                                    Düzenle
+                                </button>
+                                <button class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                    Sil
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -173,8 +151,18 @@
     </template>
     <template #actions>
         <div class="flex items-center justify-center gap-x-5">
-            <button @click="addCaseModal = false" class="outline-none h-[32px] flex items-center justify-center text-xs bg-red-500 text-white px-5 py-2 rounded-lg">Cancel</button>
-            <button @click="addCase();" class="outline-none h-[32px] flex items-center justify-center text-xs bg-green-600 text-white px-5 py-2 rounded-lg">Save</button>
+            <button @click="addCaseModal = false" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                İptal
+            </button>
+            <button @click="addCase();" class="inline-flex items-center px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Kaydet
+            </button>
         </div>
     </template>
     </general-Modal>
@@ -195,6 +183,7 @@ export default {
     },
     data() {
         return {
+            viewMode: 'table',
             addObj : {
                 title :null,
                 description : null,
