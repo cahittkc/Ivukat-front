@@ -5,7 +5,7 @@
 
 @layer {
     .input-item {
-        @apply  h-[44px] text-xs rounded-lg text-zinc-700 outline-0 border border-gray-400 focus:border-indigo-500 w-full transition-all pl-1
+        @apply  h-[44px] text-xs rounded-lg text-zinc-700 outline-0 border border-gray-400 focus:border-indigo-500 w-full transition-all pl-3
     }
     .input-item-w-icon {
         @apply  h-[44px] text-xs rounded-lg text-zinc-700 outline-0 border border-gray-400 focus:border-indigo-500 w-full transition-all pl-9

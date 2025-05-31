@@ -28,14 +28,14 @@ export default {
   },
   methods: {
     async session(){
-      console.log('session çalıştı', this.user);
-      if(this.user){
-        const session = await this.$appAxios.get('auth/session')
-          if(session.success){
-            this.$store.commit('setUser', session.data)
-            return;
-          }
+      if(!this.user){
+        return;
       }
+      const session = await this.$appAxios.get('auth/session')
+        if(session.success){
+          this.$store.commit('setUser', session.data)
+          return;
+        }
     },
     async refreshToken(){
       const response = await this.$appAxios.get('auth/refresh')
@@ -62,6 +62,9 @@ export default {
           this.$store.commit("setExpTime", newTime);
           this.refreshTokenTimer = setTimeout(async () => {
             console.log('başladı', this.expTime);
+            if(this.expTime == null){
+              return;
+            }
             this.refreshToken();
           }, this.expTime);
         }

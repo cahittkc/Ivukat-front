@@ -90,8 +90,8 @@
     <general-Modal
         v-model="addCaseModal"
         title="Başlık"
-        :full-height="false"
-        :close-on-backdrop="true"
+        :full-height="true"
+        :close-on-backdrop="false"
         :close-on-esc="true"
         @close="handleClose"
     >
@@ -226,7 +226,12 @@ export default {
     },
     methods: {
         async getMyCases() {
-            const response = await this.$appAxios.get(`cases/get-cases-by-company/${this.user?.company?.id}`)
+            const data = {
+                companyId : this.user.company.id,
+                userId : this.user.id,
+                isOwner : this.user.isOwner
+            }
+            const response = await this.$appAxios.post(`cases/get-case-by-self`,data)
             if (response.success) {
                 this.cases = response.data
             }
@@ -279,9 +284,11 @@ export default {
         }
     },
     async created() {
-        await this.getMyCases();
-        await this.getCompanyLawyers();
-        await this.getCaseTypes();
+        if(this.user){
+            await this.getMyCases();
+            await this.getCompanyLawyers();
+            await this.getCaseTypes();
+        }
     },
     mounted() {
         // Close dropdown when clicking outside
