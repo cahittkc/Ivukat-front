@@ -1,42 +1,42 @@
 <template>
-  <div class="min-h-screen flex">
+  <div class="min-h-screen flex bg-gradient-to-b from-gray-900 to-black">
     <!-- Sol Taraf - Görsel Alan -->
-    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-cyan-500 to-cyan-700 items-center justify-center p-12">
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-800 to-gray-900 items-center justify-center p-12">
       <div class="max-w-lg text-white">
         <h1 class="text-5xl font-bold mb-6">Ivukat</h1>
-        <p class="text-xl text-cyan-100 mb-8">Hukuk dünyasında dijital çözümler</p>
+        <p class="text-xl text-gray-300 mb-8">Hukuk dünyasında dijital çözümler</p>
         <div class="space-y-4">
           <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 rounded-full bg-cyan-500/10 flex items-center justify-center">
+              <svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Güvenli Erişim</h3>
-              <p class="text-sm text-cyan-100">Verileriniz güvende</p>
+              <h3 class="font-semibold text-white">Güvenli Erişim</h3>
+              <p class="text-sm text-gray-300">Verileriniz güvende</p>
             </div>
           </div>
           <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 rounded-full bg-cyan-500/10 flex items-center justify-center">
+              <svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Hızlı İşlem</h3>
-              <p class="text-sm text-cyan-100">Anında erişim</p>
+              <h3 class="font-semibold text-white">Hızlı İşlem</h3>
+              <p class="text-sm text-gray-300">Anında erişim</p>
             </div>
           </div>
           <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 rounded-full bg-cyan-500/10 flex items-center justify-center">
+              <svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Özelleştirilebilir</h3>
-              <p class="text-sm text-cyan-100">İhtiyaçlarınıza göre</p>
+              <h3 class="font-semibold text-white">Özelleştirilebilir</h3>
+              <p class="text-sm text-gray-300">İhtiyaçlarınıza göre</p>
             </div>
           </div>
         </div>
@@ -48,16 +48,16 @@
       <div class="w-full max-w-md">
         <!-- Mobil Logo -->
         <div class="lg:hidden text-center mb-8">
-          <h1 class="text-3xl font-bold text-cyan-600">Ivukat</h1>
+          <h1 class="text-3xl font-bold text-cyan-500">Ivukat</h1>
         </div>
 
         <div class="text-center mb-8">
-          <h2 class="text-2xl font-semibold text-gray-800">Hoş Geldiniz</h2>
-          <p class="text-gray-500 mt-2">Hesabınıza giriş yapın</p>
+          <h2 class="text-2xl font-semibold text-white">Hoş Geldiniz</h2>
+          <p class="text-gray-300 mt-2">Hesabınıza giriş yapın</p>
         </div>
 
         <!-- Hata Mesajı -->
-        <div v-if="loginErr" class="mb-6 p-4 rounded-lg bg-red-50 border border-red-200">
+        <div v-if="loginErr" class="mb-6 p-4 rounded-lg bg-red-900/50 border border-red-800">
           <div class="flex">
             <div class="flex-shrink-0">
               <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -65,13 +65,13 @@
               </svg>
             </div>
             <div class="ml-3">
-              <p class="text-sm text-red-700">{{ loginErr }}</p>
+              <p class="text-sm text-red-200">{{ loginErr }}</p>
             </div>
             <div class="ml-auto pl-3">
               <div class="-mx-1.5 -my-1.5">
                 <button
                   @click="loginErr = null"
-                  class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  class="inline-flex rounded-md p-1.5 text-red-400 hover:bg-red-800/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
                   <span class="sr-only">Kapat</span>
                   <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -86,7 +86,7 @@
         <form @submit.prevent="handleLogin" class="space-y-6">
           <div class="space-y-4">
             <div>
-              <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Kullanıcı Adı</label>
+              <label for="username" class="block text-sm font-medium text-gray-300 mb-1">Kullanıcı Adı</label>
               <div class="relative">
                 <input
                   id="username"
@@ -94,14 +94,14 @@
                   type="text"
                   required
                   :disabled="isLoading"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 disabled:bg-gray-50"
+                  class="input-item"
                   placeholder="Kullanıcı adınızı girin"
                 />
               </div>
             </div>
 
             <div>
-              <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Şifre</label>
+              <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Şifre</label>
               <div class="relative">
                 <input
                   id="password"
@@ -109,7 +109,7 @@
                   type="password"
                   required
                   :disabled="isLoading"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 disabled:bg-gray-50"
+                  class="input-item"
                   placeholder="Şifrenizi girin"
                 />
               </div>
@@ -123,14 +123,14 @@
                 v-model="rememberMe"
                 type="checkbox"
                 :disabled="isLoading"
-                class="h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-gray-300 rounded"
+                class="h-4 w-4 text-cyan-500 focus:ring-cyan-500 border-gray-600 rounded bg-gray-700"
               />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+              <label for="remember-me" class="ml-2 block text-sm text-gray-300">
                 Beni hatırla
               </label>
             </div>
 
-            <a href="#" class="text-sm font-medium text-cyan-600 hover:text-cyan-500">
+            <a href="#" class="text-sm font-medium text-cyan-500 hover:text-cyan-400">
               Şifremi unuttum
             </a>
           </div>
@@ -138,7 +138,7 @@
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full cursor-pointer flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full cursor-pointer flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-cyan-500 hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg
               v-if="isLoading"
@@ -165,11 +165,11 @@
           </button>
 
           <div class="text-center">
-            <p class="text-sm text-gray-600">
+            <p class="text-sm text-gray-400">
               Hesabınız yok mu?
-              <a href="#" class="font-medium text-cyan-600 hover:text-cyan-500">
+              <router-link to="/register" class="font-medium text-cyan-500 hover:text-cyan-400">
                 Kayıt ol
-              </a>
+              </router-link>
             </p>
           </div>
         </form>
@@ -219,7 +219,7 @@ export default {
             if(session.success){
               this.$root.setRefreshTokenTime();
               this.$store.commit('setUser', session.data)
-              this.$router.push({ name: 'Home' });
+              this.$router.push({ name: 'Dashboard' });
             }
         }
         else{

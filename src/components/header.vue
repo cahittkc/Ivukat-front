@@ -1,10 +1,10 @@
 <template>
-  <header class="h-[64px] min-h-[64px] bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 h-full">
+  <header v-if="user != null" class="h-[64px] min-h-[64px] bg-gray-900 backdrop-blur-md shadow-sm border-b border-gray-800 z-50 fixed top-0 left-0 right-0">
+    <div class="container mx-auto px-4 h-full">
       <div class="flex justify-between items-center h-full">
         <!-- Sol taraf - Logo -->
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-cyan-600">Ivukat</h1>
+          <h1 class="text-xl font-bold text-cyan-500">Ivukat</h1>
         </div>
 
         <!-- Sağ taraf - Kullanıcı menüsü -->
@@ -14,9 +14,12 @@
               @click="isOpen = !isOpen"
               class="flex items-center space-x-3 focus:outline-none cursor-pointer"
             >
-              <span class="text-sm font-medium text-gray-700 capitalize">{{ user?.firstName || 'Kullanıcı' }}</span>
-              <div class="h-8 w-8 rounded-full bg-cyan-100 flex items-center justify-center">
-                <span class="text-cyan-600 font-medium text-sm">
+              <div class="flex flex-col gap-y-0.5 items-start">
+                <span class="text-sm font-medium text-gray-300 capitalize">{{ user?.firstName || 'Kullanıcı' }}</span>
+                <span class="text-gray-400 text-xs capitalize">{{ user.company.name }}</span>
+              </div>
+              <div class="h-8 w-8 rounded-full bg-cyan-500/10 flex items-center justify-center">
+                <span class="text-cyan-500 font-medium text-sm">
                   {{ user?.firstName?.charAt(0).toUpperCase() || 'U' }}
                 </span>
               </div>
@@ -38,25 +41,25 @@
             <!-- Dropdown menü -->
             <div
               v-if="isOpen"
-              class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+              class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-gray-700 ring-opacity-5 focus:outline-none z-50"
             >
               <div class="py-1">
                 <a
                   href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
                 >
                   Profilim
                 </a>
                 <a
                   href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
                 >
                   Ayarlar
                 </a>
-                <div class="border-t border-gray-100"></div>
+                <div class="border-t border-gray-700"></div>
                 <a
                   href="#"
-                  class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                  class="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
                   @click="handleLogout"
                 >
                   Çıkış Yap
@@ -110,7 +113,5 @@ export default {
 }
 
 /* Hover efektleri */
-.hover\:bg-gray-50:hover {
-  background-color: #f9fafb;
-}
+/* Removed redundant hover style */
 </style>           

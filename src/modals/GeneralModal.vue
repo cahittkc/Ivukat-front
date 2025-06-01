@@ -1,8 +1,8 @@
 <template>
     <Transition name="fade">
         <div v-if="modelValue" 
-            style="background: rgba(0, 0, 0, 0.5)" 
-            class="fixed top-0 left-0 w-full h-full z-20 flex text-black"
+            style="background: rgba(0, 0, 0, 0.7)" 
+            class="fixed top-0 left-0 w-full h-full z-50 flex"
             @click="handleBackdropClick"
             role="dialog"
             aria-modal="true"
@@ -10,21 +10,21 @@
             <div @click="stopClose($event)" 
                 id="content" 
                 :class="[`${width}`, { 'max-h-[90vh]': !fullHeight }]" 
-                class="bg-white  z-50 max-[450px]:!w-[98%] rounded-lg absolute top-1/2 transition-all left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col overflow-y-auto shadow-xl">
-                <div class="p-4 border-b  border-gray-200 flex justify-between items-center">
+                class="bg-gray-800 text-gray-200 z-50 max-[450px]:!w-[98%] rounded-lg absolute top-1/2 transition-all left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col overflow-y-auto shadow-xl border border-gray-700">
+                <div class="p-4 border-b border-gray-700 flex justify-between items-center">
                     <span></span>
-                    <span :id="titleId" class="text-lg  text-gray-800 max-lg:text-base font-semibold">{{title}}</span>
+                    <span :id="titleId" class="text-lg text-white max-lg:text-base font-semibold">{{title}}</span>
                     <button 
                         @click="close()" 
-                        class="text-gray-500 hover:text-red-500 transition-colors duration-200"
+                        class="text-gray-400 hover:text-white transition-colors duration-200"
                         aria-label="Close modal">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="p-4 max-sm:p-3 overflow-y-auto dark:text-gray-200 text-gray-700">
+                <div class="p-4 max-sm:p-3 overflow-y-auto text-gray-300">
                     <slot name="content"></slot>
                 </div>
-                <div v-if="$slots.actions" class="mt-auto py-4 px-4 flex items-center justify-center gap-x-4 border-t  border-gray-200 w-full">
+                <div v-if="$slots.actions" class="mt-auto py-4 px-4 flex items-center justify-center gap-x-4 border-t border-gray-700 w-full">
                     <slot name="actions"></slot>
                 </div>
             </div>

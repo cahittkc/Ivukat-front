@@ -1,6 +1,8 @@
 <template>
-  <Header v-if="user != null"></Header>
-  <router-view></router-view>
+  <Header></Header>
+  <div :class="user != null ? 'pt-[64px]' : ''" class="min-h-screen">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -83,4 +85,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style>
+
+#app{
+  min-height: 100svh;
+  background-image: linear-gradient(to bottom, #111827, #000);
+}
+
+
+</style>

@@ -56,7 +56,7 @@ const store = createStore({
             commit('setExpTime', null)
             commit('setExpirationDate', null)
             commit('setToken', {accessToken : null, expiresIn : null})
-            router.push({name : 'Login'})
+            router.push({name : 'Home'})
         }
     },
 

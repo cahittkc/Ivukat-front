@@ -7,6 +7,14 @@ const routes = [
         name: 'Home',
         component: () => import('./views/home.vue'),
         meta: {
+            requiresAuth: false
+        }
+    },
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('./views/dashboard.vue'),
+        meta: {
             requiresAuth: true
         }
     },
@@ -16,6 +24,14 @@ const routes = [
         component: () => import('./components/login.vue'),
         meta: {
             requiresAuth: false
+        }
+    },
+    {
+        path: '/case-detail/:id',
+        name: 'caseDetail',
+        component: () => import('./views/caseDetail.vue'),
+        meta: {
+            requiresAuth: true
         }
     },
     {
@@ -36,12 +52,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
     const isAuthenticated = store.getters.getIsAuthenticated
-    const isAuthPage = to.path === '/login' || to.path === '/register'
+    const isRestrictedPageForAuthenticated = to.path === '/login' || to.path === '/register' || to.path === '/'
 
     if (requiresAuth && !isAuthenticated) {
         next('/login')
-    } else if (isAuthPage && isAuthenticated) {
-        next('/')
+    } else if (isRestrictedPageForAuthenticated && isAuthenticated) {
+        next('/dashboard')
     } else {
         next()
     }

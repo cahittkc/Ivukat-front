@@ -1,291 +1,192 @@
 <template>
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Dava Listesi</h1>
-            <div class="flex items-center gap-4">
-                
-                <button @click="this.addCaseModal = true" class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors duration-200">
-                    Yeni Dava Ekle
-                </button>
-            </div>
-        </div>
-       
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Başlık</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tip</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Şirket</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Oluşturulma</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Güncelleme</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="caseItem in cases" :key="caseItem.id" class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ caseItem.title }}</div>
-                            <div class="text-sm text-gray-500">{{ caseItem.description }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-3 py-1 bg-cyan-100 text-cyan-800 rounded-full text-sm font-medium">
-                                {{ caseItem.type.name }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ caseItem.company.name }}</div>
-                            <div class="text-sm text-gray-500">{{ caseItem.company.email }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ formatDate(caseItem.createdAt) }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ formatDate(caseItem.updatedAt) }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div class="flex justify-end space-x-3">
-                                <button class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                    </svg>
-                                    Düzenle
-                                </button>
-                                <button class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                    </svg>
-                                    Sil
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <general-Modal
-        v-model="addCaseModal"
-        title="Başlık"
-        :full-height="true"
-        :close-on-backdrop="false"
-        :close-on-esc="true"
-        @close="handleClose"
-    >
-    <template #content>
-        <div class="flex flex-col w-full space-y-5 pb-[100px]">
-            <div class="flex flex-col gap-y-1">
-                <span class="xs-txt">Title</span>
-                <input v-model="addObj.title" class="input-item" type="text">
-            </div>
-            <div class="flex flex-col gap-y-1">
-                <span class="xs-txt">Description</span>
-                <input v-model="addObj.description" class="input-item" type="text">
-            </div>
-            <div class="flex flex-col gap-y-1">
-                <span class="xs-txt">Case Types</span>
-                <select v-model="addObj.typeId" class="select-item" name="" id="">
-                    <option  v-for="ct in caseTypes" :value="ct.id">{{ ct.name }}</option>
-                </select>
-            </div>
-            <div class="flex flex-col gap-y-1">
-                <span class="xs-txt">Employees</span>
-                <div class="relative">
-                    <div 
-                        @click="toggleDropdown" 
-                        class="select-item min-h-[38px] flex flex-wrap gap-2 p-1 cursor-pointer"
-                    >
-                        <div v-if="selectedLawyers.length === 0" class="text-gray-400 py-1 px-2 flex items-center">
-                            Select employees...
-                        </div>
-                        <div 
-                            v-for="lawyer in selectedLawyers" 
-                            :key="lawyer.id"
-                            class="bg-blue-100 text-blue-800 px-2 py-1 rounded-md flex items-center gap-1 text-sm"
-                        >
-                            {{ lawyer.firstName }}
-                            <button 
-                                @click.stop="removeLawyer(lawyer)"
-                                class="text-blue-600 hover:text-blue-800"
-                            >
-                                ×
-                            </button>
-                        </div>
+    <div class="min-h-screen bg-gradient-to-b from-gray-800 to-black">
+        <!-- Header -->
+        <header v-if="!user" class="fixed w-full bg-gray-900/80 backdrop-blur-md shadow-sm z-50 border-b border-gray-800">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-xl font-bold text-white">Ivukat</span>
                     </div>
-                    
-                    <div 
-                        v-if="isDropdownOpen" 
-                        class="absolute z-[80] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
-                    >
-                        <div class="p-2">
-                            <input 
-                                type="text"
-                                v-model="searchQuery"
-                                placeholder="Search employees..."
-                                class="w-full px-3 py-2 xs-txt border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div class="py-1">
-                            <div 
-                                v-for="lawyer in filteredLawyers" 
-                                :key="lawyer.id"
-                                @click="toggleLawyerSelection(lawyer)"
-                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2 xs-txt"
-                                :class="{ 'bg-blue-50': isSelected(lawyer) }"
-                            >
-                                <div class="w-4 h-4 border border-gray-300 rounded flex items-center justify-center"
-                                    :class="{ 'bg-blue-500 border-blue-500': isSelected(lawyer) }"
-                                >
-                                    <svg v-if="isSelected(lawyer)" class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
-                                    </svg>
-                                </div>
-                                {{ lawyer.firstName }}
-                            </div>
-                        </div>
+                    <div class="flex items-center space-x-4">
+                        <router-link to="/login" class="text-gray-300 hover:text-cyan-500 transition-colors duration-200">Giriş Yap</router-link>
+                        <router-link to="/register" class="bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600 transition-colors duration-200">Hemen Kayıt Ol</router-link>
                     </div>
                 </div>
             </div>
-        </div>
-    </template>
-    <template #actions>
-        <div class="flex items-center justify-center gap-x-5">
-            <button @click="addCaseModal = false" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-                İptal
-            </button>
-            <button @click="addCase();" class="inline-flex items-center px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Kaydet
-            </button>
-        </div>
-    </template>
-    </general-Modal>
+        </header>
+
+        <!-- Hero Section with Animation -->
+        <section class="pt-32 pb-20 px-4">
+            <div class="container mx-auto">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-5xl font-bold text-white mb-6 animate-fade-in-up">
+                        Hukuk Büronuzu <span class="text-cyan-500">Dijital</span> Dünyaya Taşıyın
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8 animate-fade-in-up animation-delay-200">
+                        Modern ve yenilikçi çözümlerle hukuk büronuzu yönetin. Dava takibi, müvekkil ilişkileri ve daha fazlası tek bir platformda.
+                    </p>
+                    <router-link to="/register" class="inline-flex items-center px-8 py-4 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors duration-200 text-lg font-medium animate-fade-in-up animation-delay-400">
+                        Ücretsiz Deneyin
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </router-link>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="py-16 bg-gray-900">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="text-center animate-fade-in-up">
+                        <div class="text-4xl font-bold text-cyan-500 mb-2 counter">500+</div>
+                        <div class="text-gray-300">Aktif Hukuk Bürosu</div>
+                    </div>
+                    <div class="text-center animate-fade-in-up animation-delay-200">
+                        <div class="text-4xl font-bold text-cyan-500 mb-2 counter">10K+</div>
+                        <div class="text-gray-300">Yönetilen Dava</div>
+                    </div>
+                    <div class="text-center animate-fade-in-up animation-delay-400">
+                        <div class="text-4xl font-bold text-cyan-500 mb-2 counter">50K+</div>
+                        <div class="text-gray-300">Mutlu Müvekkil</div>
+                    </div>
+                    <div class="text-center animate-fade-in-up animation-delay-600">
+                        <div class="text-4xl font-bold text-cyan-500 mb-2 counter">99%</div>
+                        <div class="text-gray-300">Müşteri Memnuniyeti</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section with Hover Effects -->
+        <section class="py-20 bg-gray-900">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-gray-700">
+                        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Dava Yönetimi</h3>
+                        <p class="text-gray-300">Dava süreçlerinizi dijital ortamda takip edin, önemli tarihleri kaçırmayın ve tüm belgeleri düzenli tutun.</p>
+                    </div>
+
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-gray-700">
+                        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Müvekkil İlişkileri</h3>
+                        <p class="text-gray-300">Müvekkillerinizle iletişiminizi güçlendirin, dosya paylaşımını kolaylaştırın ve süreçleri şeffaf tutun.</p>
+                    </div>
+
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-gray-700">
+                        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Analitik Raporlar</h3>
+                        <p class="text-gray-300">Dava istatistiklerinizi analiz edin, performansınızı ölçün ve veriye dayalı kararlar alın.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-20 bg-gray-900">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-white mb-12">Müşterilerimiz Ne Diyor?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gray-800 p-8 rounded-xl animate-fade-in-up border border-gray-700">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-500 font-bold text-xl">A</div>
+                            <div class="ml-4">
+                                <div class="font-semibold text-white">Av. Ahmet Yılmaz</div>
+                                <div class="text-gray-400 text-sm">Yılmaz Hukuk Bürosu</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300">"Ivukat ile dava yönetimimiz tamamen değişti. Artık her şey daha düzenli ve verimli."</p>
+                    </div>
+                    <div class="bg-gray-800 p-8 rounded-xl animate-fade-in-up animation-delay-200 border border-gray-700">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-500 font-bold text-xl">M</div>
+                            <div class="ml-4">
+                                <div class="font-semibold text-white">Av. Mehmet Demir</div>
+                                <div class="text-gray-400 text-sm">Demir & Demir Hukuk</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300">"Müvekkil ilişkilerimiz çok daha iyi hale geldi. Dosya paylaşımı ve iletişim artık çok kolay."</p>
+                    </div>
+                    <div class="bg-gray-800 p-8 rounded-xl animate-fade-in-up animation-delay-400 border border-gray-700">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-500 font-bold text-xl">Z</div>
+                            <div class="ml-4">
+                                <div class="font-semibold text-white">Av. Zeynep Kaya</div>
+                                <div class="text-gray-400 text-sm">Kaya Hukuk</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300">"Analitik raporlar sayesinde büromuzun performansını daha iyi takip edebiliyoruz."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section with Animation -->
+        <section class="py-20">
+            <div class="container mx-auto px-4">
+                <div class="bg-gray-800 rounded-2xl p-12 text-center animate-fade-in-up border border-gray-700">
+                    <h2 class="text-3xl font-bold text-white mb-6">Hukuk Büronuzu Geleceğe Taşıyın</h2>
+                    <p class="text-gray-300 mb-8 max-w-2xl mx-auto">
+                        Modern çözümlerle hukuk büronuzu yönetin, verimliliğinizi artırın ve müvekkillerinize daha iyi hizmet verin.
+                    </p>
+                    <router-link to="/register" class="inline-flex items-center px-8 py-4 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors duration-200 text-lg font-medium">
+                        Hemen Başlayın
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </router-link>
+                </div>
+            </div>
+        </section>
+    </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 export default {
     name: 'Home',
-    computed: {
-        ...mapState(["user"]),
-        filteredLawyers() {
-            return this.employees.filter(lawyer => 
-                lawyer.firstName.toLowerCase().includes(this.searchQuery.toLowerCase())
-            )
-        }
-    },
-    data() {
-        return {
-            viewMode: 'table',
-            addObj : {
-                title :null,
-                description : null,
-                companyId  : this.user?.company?.id,
-                typeId : null,
-                lawyerIds : [],
-            },
-            cases: [],
-            addCaseModal : false,
-            employees : [],
-            caseTypes : [],
-            isDropdownOpen: false,
-            searchQuery: '',
-            selectedLawyers: [],
-        }
-    },
-    watch : {
-        addCaseModal(value){
-            if(value == false){
-                this.addObj = {
-                    title :null,
-                    description : null,
-                    companyId  : this.user?.company?.id,
-                    typeId : null,
-                    lawyerIds : [],
-                }
-            }
-        }
-    },
-    methods: {
-        async getMyCases() {
-            const data = {
-                companyId : this.user.company.id,
-                userId : this.user.id,
-                isOwner : this.user.isOwner
-            }
-            const response = await this.$appAxios.post(`cases/get-case-by-self`,data)
-            if (response.success) {
-                this.cases = response.data
-            }
-        },
-        formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString('tr-TR')
-        },
-        async getCompanyLawyers(){
-            let data = {
-                companyId : this.user.company.id,
-                roleId : 2
-            }
-            const response = await this.$appAxios.post('users/get-company-employees',data)
-            if(response.success){
-                this.employees = response.data
-            }
-        },
-        async getCaseTypes(){
-            const response = await this.$appAxios.get('case-types/get-all-case-types')
-            if(response.success){
-                this.caseTypes = response.data
-            }
-        },
-        async addCase(){
-            const response = await this.$appAxios.post('cases/add-case',this.addObj)
-            if(response.success){
-                this.addCaseModal = false
-                await this.getMyCases();
-            }
-        },
-        toggleDropdown() {
-            this.isDropdownOpen = !this.isDropdownOpen
-        },
-        toggleLawyerSelection(lawyer) {
-            const index = this.selectedLawyers.findIndex(l => l.id === lawyer.id)
-            if (index === -1) {
-                this.selectedLawyers.push(lawyer)
-                this.addObj.lawyerIds.push(lawyer.id)
-            } else {
-                this.selectedLawyers.splice(index, 1)
-                this.addObj.lawyerIds = this.addObj.lawyerIds.filter(id => id !== lawyer.id)
-            }
-        },
-        removeLawyer(lawyer) {
-            this.selectedLawyers = this.selectedLawyers.filter(l => l.id !== lawyer.id)
-            this.addObj.lawyerIds = this.addObj.lawyerIds.filter(id => id !== lawyer.id)
-        },
-        isSelected(lawyer) {
-            return this.selectedLawyers.some(l => l.id === lawyer.id)
-        }
-    },
-    async created() {
-        if(this.user){
-            await this.getMyCases();
-            await this.getCompanyLawyers();
-            await this.getCaseTypes();
-        }
+    computed :{
+        ...mapState(["user"])
     },
     mounted() {
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.relative')) {
-                this.isDropdownOpen = false
-            }
-        })
+        // Counter animation
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = parseInt(counter.innerText);
+            let count = 0;
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16); // 60fps
+
+            const updateCount = () => {
+                if (count < target) {
+                    count += increment;
+                    counter.innerText = Math.ceil(count) + (counter.innerText.includes('+') ? '+' : '');
+                    requestAnimationFrame(updateCount);
+                } else {
+                    counter.innerText = target + (counter.innerText.includes('+') ? '+' : '');
+                }
+            };
+
+            updateCount();
+        });
     }
 }
 </script>
@@ -293,5 +194,33 @@ export default {
 <style scoped>
 .container {
     max-width: 1280px;
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.animation-delay-200 {
+    animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+    animation-delay: 400ms;
+}
+
+.animation-delay-600 {
+    animation-delay: 600ms;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
