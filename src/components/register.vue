@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen bg-gradient-to-b from-gray-900 to-black">
     <!-- Sol Taraf - Görsel Alan -->
-    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-800 to-gray-900 items-center justify-center p-12 gradient-bg">
+    <div class="hidden lg:flex lg:w-[35%] bg-gradient-to-br from-gray-800 to-gray-900 items-center justify-center p-12 gradient-bg">
       <div class="max-w-lg text-white">
         <h1 class="text-5xl font-bold mb-6 animate-fade-in">Ivukat</h1>
         <p class="text-xl text-gray-300 mb-8 animate-fade-in-delay">Hukuk dünyasında dijital çözümler</p>
@@ -23,8 +23,8 @@
     </div>
 
     <!-- Sağ Taraf - Register Formu -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
-      <div class="w-full max-w-md">
+    <div class="w-full lg:w-[65%] flex items-center justify-center p-8">
+      <div class="w-full items-center">
         <!-- Mobil Logo -->
         <div class="lg:hidden text-center mb-8 animate-fade-in">
           <h1 class="text-3xl font-bold text-cyan-500">Ivukat</h1>
@@ -63,60 +63,85 @@
           </div>
         </div>
 
-        <form @submit.prevent="handleRegister" class="space-y-6">
-          <div class="space-y-4">
-            <!-- Form inputs with animations -->
-            <div v-for="(field, index) in formFields" 
-                 :key="field.id"
-                 :style="{ animationDelay: `${index * 0.1}s` }"
-                 class="animate-fade-in-up">
-              <label :for="field.id" class="block text-sm font-medium text-gray-300 mb-1">
-                {{ field.label }}
-              </label>
-              <div class="relative">
-                <input
-                  :id="field.id"
-                  v-model="field.model"
-                  :type="(field.type === 'password' && field.id === 'password' && showPassword) || (field.type === 'password' && field.id === 'passwordConfirm' && showPasswordConfirm) ? 'text' : field.type"
-                  required
-                  :disabled="isLoading"
-                  class="input-item"
-                  :placeholder="field.placeholder"
-                />
-                 <button 
-                    v-if="field.type === 'password'"
-                    type="button"
-                    @click="togglePasswordVisibility(field.id)"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-400 hover:text-gray-300 focus:outline-none">
-                    <svg v-if="(field.id === 'password' && showPassword) || (field.id === 'passwordConfirm' && showPasswordConfirm)" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.97 0-9.23-3.04-11.25-7 2.02-3.96 6.28-7 11.25-7a10.05 10.05 0 011.875.175M10 12a2 2 0 100-4 2 2 0 000 4zm-4.938 4.938A9.959 9.959 0 014 12c0-1.497.356-2.91.938-4.125m5.132 8.263c-1.18-.175-2.3-.6-3.275-1.25L19.75 4.25l-1.5-1.5L5.25 15.275l-1.5-1.5L.5 18.75l1.5 1.5L6.938 16.938z" />
-                    </svg>
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                </button>
-              </div>
+        <div class="flex flex-col gap-y-6 max-w-lg mx-auto">
+          <div class="flex flex-col gap-y-3 w-full">
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">Şirket Adı</span>
+              <input v-model="companyObj.name" type="text" class="input-item w-full">
+            </div>
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">Şirket Email</span>
+              <input  v-model="companyObj.email" type="email" class="input-item w-full">
+            </div>
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">Şirket Adresi</span>
+              <input  v-model="companyObj.address" type="text" class="input-item w-full">
+            </div>
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">Şirket Telefon Numarası</span>
+              <input  v-model="companyObj.phoneNumber" v-mask="'0(###) ### ## ##'" type="text" placeholder="0(" class="input-item w-full">
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-y-3 w-full">
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">Kullanıcı Adı</span>
+              <input v-model="registerObj.username" type="text" class="input-item w-full">
+            </div>
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">Adınız</span>
+              <input v-model="registerObj.firstName" type="text" class="input-item w-full">
+            </div>
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">İkinci Ad(opsiyonel)</span>
+              <input v-model="registerObj.middleName" type="text" class="input-item w-full">
+            </div>
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">Soyadınız</span>
+              <input v-model="registerObj.lastName" type="text" class="input-item w-full">
+            </div>
+            <div class="flex flex-col gap-y-1">
+              <span class="xs-txt">Email</span>
+              <input v-model="registerObj.email" type="email" class="input-item w-full">
+            </div>
+            <div class="flex flex-col gap-y-1 relative">
+              <span class="xs-txt">Password</span>
+              <input v-model="registerObj.password" :type="showPass ? 'password' : 'text'" class="input-item w-full">
+              <i v-if="showPass" @click="showPass = !showPass" class="fa-solid fa-eye-slash absolute right-4 top-[31px] cursor-pointer xs-txt !text-sm"></i>
+              <i v-if="!showPass" @click="showPass = !showPass" class="fa-solid fa-eye absolute right-4 top-[31px] cursor-pointer xs-txt !text-sm"></i>
             </div>
           </div>
 
           <button
-            type="submit"
+            @click="register();"
             :disabled="isLoading"
-            class="w-full cursor-pointer h-[48px] flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-cyan-500 hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed btn-hover"
+            class="w-full cursor-pointer flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-cyan-500 hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Kayıt Ol
+            <svg
+              v-if="isLoading"
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            {{ isLoading ? 'Kayıt işlemi yapılıyor...' : 'Kayıt Ol' }}
           </button>
-
-          <div class="text-center animate-fade-in-delay">
-            <p class="text-sm text-gray-400">
-              Zaten hesabınız var mı?
-              <router-link to="/login" class="font-medium text-cyan-500 hover:text-cyan-400 transition-colors duration-200">
-                Giriş yap
-              </router-link>
-            </p>
-          </div>
-        </form>
+        </div>
+       
       </div>
     </div>
   </div>
@@ -127,6 +152,14 @@ export default {
   name: 'Register',
   data() {
     return {
+      showPass : true,
+      isLoading :false,
+      companyObj : {
+          name : null,
+          address : null,
+          phoneNumber : null,
+          email : null
+      },
       registerObj : {
         username : null,
         firstName : null,
@@ -136,18 +169,9 @@ export default {
         password : null,
         companyId : null,
         roleId : null,
+        isVerified : true,
         isOwner : true
       },
-      companyName: '',
-      username: '',
-      email: '',
-      phone: '',
-      password: '',
-      passwordConfirm: '',
-      isLoading: false,
-      registerErr: null,
-      showPassword: false,
-      showPasswordConfirm: false,
       features: [
         {
           title: 'Kolay Kayıt',
@@ -165,59 +189,33 @@ export default {
           icon: 'ShieldCheckIcon'
         }
       ],
-      formFields: [
-        {
-          id: 'companyName',
-          label: 'Şirket Adı',
-          type: 'text',
-          model: 'companyName',
-          placeholder: 'Şirket adınızı girin'
-        },
-        {
-          id: 'username',
-          label: 'Kullanıcı Adı',
-          type: 'text',
-          model: 'username',
-          placeholder: 'Kullanıcı adınızı girin'
-        },
-        {
-          id: 'email',
-          label: 'E-posta',
-          type: 'email',
-          model: 'email',
-          placeholder: 'E-posta adresinizi girin'
-        },
-        {
-          id: 'phone',
-          label: 'Telefon',
-          type: 'tel',
-          model: 'phone',
-          placeholder: 'Telefon numaranızı girin'
-        },
-        {
-          id: 'password',
-          label: 'Şifre',
-          type: 'password',
-          model: 'password',
-          placeholder: 'Şifrenizi girin'
-        },
-        {
-          id: 'passwordConfirm',
-          label: 'Şifre Tekrar',
-          type: 'password',
-          model: 'passwordConfirm',
-          placeholder: 'Şifrenizi tekrar girin'
-        }
-      ]
+      
     }
   },
   methods: {
-      togglePasswordVisibility(fieldId) {
-          if (fieldId === 'password') {
-              this.showPassword = !this.showPassword;
-          } else if (fieldId === 'passwordConfirm') {
-              this.showPasswordConfirm = !this.showPasswordConfirm;
+      async register(){
+        this.isLoading = true
+        const companyResponse = await this.$appAxios.post('companies/add-company', this.companyObj)
+        if(companyResponse.success){
+          this.registerObj.companyId = companyResponse.data.id
+          const registerResponse = await this.$appAxios.post('auth/register', this.registerObj)
+          if(registerResponse.success){
+            const lgnUser = {
+              username : this.registerObj.username,
+              password : this.registerObj.password
+            }
+            const res = await this.$store.dispatch('login', lgnUser)
+            if(res.success == false){
+              this.isLoading = false
+              alert('loginError')
+            }else {
+              this.$root.setRefreshTokenTime();
+            }
           }
+          this.isLoading = false
+        }else {
+          this.isLoading = false
+        }
       }
   }
   // ... existing methods ...

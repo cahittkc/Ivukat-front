@@ -86,16 +86,15 @@
         <form @submit.prevent="handleLogin" class="space-y-6">
           <div class="space-y-4">
             <div>
+              
               <label for="username" class="block text-sm font-medium text-gray-300 mb-1">Kullanıcı Adı</label>
               <div class="relative">
-                <input
-                  id="username"
+                <CustomInput
                   v-model="username"
                   type="text"
-                  required
-                  :disabled="isLoading"
-                  class="input-item"
                   placeholder="Kullanıcı adınızı girin"
+                  name="CircleUserRound"
+                  icon-color="white"
                 />
               </div>
             </div>
@@ -103,14 +102,12 @@
             <div>
               <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Şifre</label>
               <div class="relative">
-                <input
-                  id="password"
+                <CustomInput
                   v-model="password"
-                  type="password"
-                  required
-                  :disabled="isLoading"
-                  class="input-item"
+                  type="text"
                   placeholder="Şifrenizi girin"
+                  name="LockKeyhole"
+                  icon-color="white"
                 />
               </div>
             </div>
@@ -123,9 +120,9 @@
                 v-model="rememberMe"
                 type="checkbox"
                 :disabled="isLoading"
-                class="h-4 w-4 text-cyan-500 focus:ring-cyan-500 border-gray-600 rounded bg-gray-700"
+                class="input-item"
               />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-300">
+              <label for="remember-me" class="ml-2 block text-sm text-gray-300 whitespace-nowrap">
                 Beni hatırla
               </label>
             </div>
@@ -179,8 +176,14 @@
 </template>
 
 <script>
+import { CircleUserRound } from 'lucide-vue-next';
+import { LockKeyhole } from 'lucide-vue-next';
 export default {
   name: 'Login',
+  components :{
+      CircleUserRound,
+      LockKeyhole
+  },
   data() {
     return {
       username: '',

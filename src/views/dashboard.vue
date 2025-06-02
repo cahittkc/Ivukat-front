@@ -190,7 +190,7 @@ export default {
             addObj : {
                 title :null,
                 description : null,
-                companyId  : this.user?.company?.id,
+                companyId  : null,
                 typeId : null,
                 lawyerIds : [],
             },
@@ -209,7 +209,7 @@ export default {
                 this.addObj = {
                     title :null,
                     description : null,
-                    companyId  : this.user?.company?.id,
+                    companyId  : null,
                     typeId : null,
                     lawyerIds : [],
                 }
@@ -251,6 +251,7 @@ export default {
             }
         },
         async addCase(){
+            this.addObj.companyId = this.user.company.id
             const response = await this.$appAxios.post('cases/add-case',this.addObj)
             if(response.success){
                 this.addCaseModal = false

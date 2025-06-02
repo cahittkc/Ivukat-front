@@ -16,7 +16,7 @@
             >
               <div class="flex flex-col gap-y-0.5 items-start">
                 <span class="text-sm font-medium text-gray-300 capitalize">{{ user?.firstName || 'Kullanıcı' }}</span>
-                <span class="text-gray-400 text-xs capitalize">{{ user.company.name }}</span>
+                <span class="text-gray-400 text-xs capitalize">{{ user?.company?.name }}</span>
               </div>
               <div class="h-8 w-8 rounded-full bg-cyan-500/10 flex items-center justify-center">
                 <span class="text-cyan-500 font-medium text-sm">
